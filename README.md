@@ -1,5 +1,7 @@
 <h1 align="center">Black-Scholes Options Pricing Calculator</h1>
 
+![Screenshot 2025-02-19 at 10 55 57 PM](https://github.com/user-attachments/assets/e6dd88d6-18e4-4e4f-b322-377609af6d2e)
+
 ## Project Description
 
 
