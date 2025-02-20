@@ -55,13 +55,6 @@ Black-Scholes Model Explanation: [Wikipedia](https://en.wikipedia.org/wiki/Black
 
 Formula Images: [Macroption](https://www.macroption.com/black-scholes-formula/)
 
-## Issues and Suggestions
-
-
-If you encounter an error in the program, a way to make code faster, any wrong application of financial formulas and concepts or just want to make a suggestion on how to make this project better raise a new issue [here](https://github.com/TFSM00/Black-Scholes-Calculator/issues/new/choose). 
-
-## 📝 Licence
-
 
 Copyright © 2022 [Tiago Moreira](https://github.com/TFSM00).<br />
 This project is [MIT](https://github.com/TFSM00/Black-Scholes-Calculator/blob/main/LICENSE.txt) licensed.
