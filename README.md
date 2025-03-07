@@ -56,7 +56,3 @@ Their formulas can be seen below:
 Black-Scholes Model Explanation: [Wikipedia](https://en.wikipedia.org/wiki/Black%E2%80%93Scholes_model) and [Investopedia](https://www.investopedia.com/terms/b/blackscholes.asp)
 
 Formula Images: [Macroption](https://www.macroption.com/black-scholes-formula/)
-
-
-Copyright © 2022 [Tiago Moreira](https://github.com/TFSM00).<br />
-This project is [MIT](https://github.com/TFSM00/Black-Scholes-Calculator/blob/main/LICENSE.txt) licensed.
