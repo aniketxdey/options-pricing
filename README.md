@@ -27,23 +27,6 @@ A comprehensive options pricing and analysis application that enables multiple f
 
 ![Screenshot 2025-06-30 at 12 14 47 AM](https://github.com/user-attachments/assets/9ea0b4ed-6836-4558-b196-25e6eb4e2d60)
 
-```
-SPX Weekly Options Backtesting Results
-====================================
-Dataset: S&P 500 Weekly Options (SPXW)
-Time Period: Multiple dates
-Total Contracts Analyzed: 2,000
-
-Model Performance:
-Black-Scholes:     MAE: 2.15, RMSE: 4.89
-Monte Carlo:       MAE: 2.22, RMSE: 4.95
-Binomial Tree:     MAE: 2.18, RMSE: 4.91
-XGBoost ML:        MAE: 1.78, RMSE: 3.92
-Random Forest ML:  MAE: 1.85, RMSE: 4.05
-
-Best Performance: XGBoost ML (17.2% improvement over BS)
-```
-
 ## Features
 - Real-time Data Integration - Live stock prices via Yahoo Finance API
 - Performance Metrics - MAE, RMSE, percentage errors across all models
