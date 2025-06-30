@@ -559,7 +559,7 @@ if st.session_state.current_page == "Home":
             y=expiry_grid,
             z=vol_surface * 100,  # Convert to percentage
             colorscale='Viridis',
-            colorbar=dict(title="Implied Volatility (%)", titlefont=dict(color='white')),
+            colorbar=dict(title=dict(text="Implied Volatility (%)", font=dict(color='white'))),
             hovertemplate='Strike: %{x:.0f}<br>Days to Expiry: %{y:.0f}<br>IV: %{z:.1f}%<extra></extra>'
         )])
         
