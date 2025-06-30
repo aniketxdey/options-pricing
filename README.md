@@ -2,9 +2,15 @@
 
 A comprehensive options pricing and analysis application that enables multiple financial and machine learning models for options pricing. The app provides real-time pricing, backtesting capabilities, and professional-grade analytics through an intuitive Streamlit web interface.
 
-## Live Demo
-*Streamlit deployment URL will be added here*
+<img width="1458" alt="Screenshot 2025-06-29 at 10 13 47 PM" src="https://github.com/user-attachments/assets/49e4f22c-c44f-4ffb-80eb-2a2e56947e1e" />
 
+<img width="1451" alt="Screenshot 2025-06-29 at 10 14 15 PM" src="https://github.com/user-attachments/assets/523e8233-f544-49af-a2d5-7efebd2345ff" />
+
+<img width="1416" alt="Screenshot 2025-06-29 at 10 13 57 PM" src="https://github.com/user-attachments/assets/72612a03-9529-4235-ba39-1f1ab71ab12d" />
+
+
+## Live Demo
+[**Click Here**](https://advancedoptionspricing.streamlit.app/)
 
 ## Pricing Models
 1. Black-Scholes Model:
@@ -17,7 +23,7 @@ A comprehensive options pricing and analysis application that enables multiple f
      - Discrete-time lattice approach for American/European options
 
 ## Backtesting: 
-- The application features comprehensive historical backtesting against SPX options data
+- The application features comprehensive historical backtesting against SPX options data:
 
 ```
 SPX Weekly Options Backtesting Results
