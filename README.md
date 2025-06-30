@@ -4,8 +4,6 @@ A comprehensive options pricing and analysis application that enables multiple f
 
 <img width="1458" alt="Screenshot 2025-06-29 at 10 13 47 PM" src="https://github.com/user-attachments/assets/49e4f22c-c44f-4ffb-80eb-2a2e56947e1e" />
 
-<img width="1451" alt="Screenshot 2025-06-29 at 10 14 15 PM" src="https://github.com/user-attachments/assets/523e8233-f544-49af-a2d5-7efebd2345ff" />
-
 <img width="1416" alt="Screenshot 2025-06-29 at 10 13 57 PM" src="https://github.com/user-attachments/assets/72612a03-9529-4235-ba39-1f1ab71ab12d" />
 
 
@@ -21,9 +19,13 @@ A comprehensive options pricing and analysis application that enables multiple f
     - Heston stochastic volatility model with multi-path visualization  
 3. Binomial Tree Method:
      - Discrete-time lattice approach for American/European options
+  
+<img width="1451" alt="Screenshot 2025-06-29 at 10 14 15 PM" src="https://github.com/user-attachments/assets/523e8233-f544-49af-a2d5-7efebd2345ff" />
 
 ## Backtesting: 
 - The application features comprehensive historical backtesting against SPX options data:
+
+![Screenshot 2025-06-30 at 12 14 47 AM](https://github.com/user-attachments/assets/9ea0b4ed-6836-4558-b196-25e6eb4e2d60)
 
 ```
 SPX Weekly Options Backtesting Results
@@ -49,6 +51,9 @@ Best Performance: XGBoost ML (17.2% improvement over BS)
 - PDF Report Generation - Detailed backtesting and pricing reports
 - Model Comparison Charts - Side-by-side accuracy analysis
 - Monte Carlo Analytics - Path simulations, payoff distributions, convergence plots
+
+- <img width="740" alt="Screenshot 2025-06-29 at 10 14 27 PM" src="https://github.com/user-attachments/assets/fb9d24a3-b063-4c2e-b18b-cdb4f978f6ac" />
+
 
 ## Project Structure
 
