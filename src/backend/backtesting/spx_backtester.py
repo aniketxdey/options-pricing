@@ -25,7 +25,26 @@ class SPXBacktester:
     def __init__(self, data_path=None, output_folder='output'):
         # Get the directory of this file and construct absolute path
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        default_data_path = os.path.join(current_dir, '..', 'data', 'all_options_all_dates.csv')
+        
+        # Try multiple possible data paths for robustness
+        possible_paths = [
+            os.path.join(current_dir, '..', 'data', 'all_options_all_dates.csv'),  # Original relative path
+            os.path.join(os.getcwd(), 'src', 'backend', 'data', 'all_options_all_dates.csv'),  # From project root
+            os.path.join(os.path.dirname(os.path.dirname(current_dir)), 'backend', 'data', 'all_options_all_dates.csv'),  # Alternative
+            'src/backend/data/all_options_all_dates.csv',  # Simple relative from project root
+        ]
+        
+        # Find the first existing data file
+        default_data_path = None
+        for path in possible_paths:
+            if os.path.exists(path):
+                default_data_path = path
+                break
+        
+        # If no data file found, use the original path
+        if default_data_path is None:
+            default_data_path = possible_paths[0]
+            
         self.data_path = data_path or default_data_path
         self.output_folder = output_folder
         self.spx_data = None
