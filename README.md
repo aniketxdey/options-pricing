@@ -23,7 +23,9 @@ A comprehensive options pricing and analysis application that enables multiple f
 <img width="1451" alt="Screenshot 2025-06-29 at 10 14 15 PM" src="https://github.com/user-attachments/assets/523e8233-f544-49af-a2d5-7efebd2345ff" />
 
 ## Backtesting: 
-- The application features comprehensive historical backtesting against SPX options data:
+- The application features a comprehensive historical backtesting engine using SPX options data
+- Data is pre-processed and filtered to only yield high-quality contracts, and predicted vs. actual prices are measured
+- Models are calibrated to SPX surfaces & optimized for backtesting
 
 ![Screenshot 2025-06-30 at 12 14 47 AM](https://github.com/user-attachments/assets/9ea0b4ed-6836-4558-b196-25e6eb4e2d60)
 
