@@ -1,58 +1,222 @@
-<h1 align="center">Black-Scholes Options Pricing Calculator</h1>
+# Options Pricing & Implied Volaitlity Surface Platform
 
-![Screenshot 2025-02-19 at 10 55 57 PM](https://github.com/user-attachments/assets/e6dd88d6-18e4-4e4f-b322-377609af6d2e)
+A comprehensive options pricing and analysis application that enables multiple financial and machine learning models for options pricing. The app provides real-time pricing, backtesting capabilities, and professional-grade analytics through an intuitive Streamlit web interface.
 
-## Project Description
-
-
-This project is a Black-Scholes Options Pricing Calculator for European Options including graphical visualization of the Option Greeks.
-It is a web-hosted interactive application, hosted using [Streamlit's](streamlit.io) Sharing functionality.
-
-## Black-Scholes Model
+## Live Demo
+*Streamlit deployment URL will be added here*
 
 
-The **Black-Scholes model**, also known as the **Black-Scholes-Merton (BSM) model**, the latter taking **dividends** into account, is one of the most important concepts in modern financial theory. This mathematical equation estimates the theoretical **value of options**, taking into account the impact of time and other risk factors.
+## Pricing Models
+1. Black-Scholes Model:
+    - Analytical European option pricing with complete Greeks
+    - See detailed literature & research notes in `literature.md`
+    - Black, F. and Scholes, M. (1973). The Pricing of Options and Corporate Liabilities. Journal of Political Economy, 81(3), 637-654
+2. Monte Carlo Simulation:
+    - Heston stochastic volatility model with multi-path visualization  
+3. Binomial Tree Method:
+     - Discrete-time lattice approach for American/European options
 
-The Black-Scholes equation requires **five variables**. These inputs are **volatility**, the **price of the underlying asset**, the **strike price** of the option, the **time until expiration** of the option, and the **risk-free interest rate**. With these variables, it is theoretically possible for options sellers to set rational prices for the options that they are selling.
+## Backtesting: 
+- The application features comprehensive historical backtesting against SPX options data
 
-## Black-Scholes Model Assumptions
+```
+SPX Weekly Options Backtesting Results
+====================================
+Dataset: S&P 500 Weekly Options (SPXW)
+Time Period: Multiple dates
+Total Contracts Analyzed: 2,000
 
+Model Performance:
+Black-Scholes:     MAE: 2.15, RMSE: 4.89
+Monte Carlo:       MAE: 2.22, RMSE: 4.95
+Binomial Tree:     MAE: 2.18, RMSE: 4.91
+XGBoost ML:        MAE: 1.78, RMSE: 3.92
+Random Forest ML:  MAE: 1.85, RMSE: 4.05
 
-The Black-Scholes model makes certain assumptions:
+Best Performance: XGBoost ML (17.2% improvement over BS)
+```
 
-- No dividends are paid out during the life of the option.
-- Markets are random (i.e., market movements cannot be predicted).
-- There are no transaction costs in buying the option.
-- The risk-free rate and volatility of the underlying asset are known and constant.
-- The returns on the underlying asset are log-normally distributed.
-- The option is European and can only be exercised at expiration.
+## Features
+- Real-time Data Integration - Live stock prices via Yahoo Finance API
+- Performance Metrics - MAE, RMSE, percentage errors across all models
+- Interactive Visualizations- 3D surface plots, heatmaps, convergence analysis, 3D volatility surfaces across strikes and expirations
+- PDF Report Generation - Detailed backtesting and pricing reports
+- Model Comparison Charts - Side-by-side accuracy analysis
+- Monte Carlo Analytics - Path simulations, payoff distributions, convergence plots
 
-## Call and Put Option Price Formulas
+## Project Structure
 
+```
+quant-options-pricing/
+├── README.md                           # Project documentation
+├── requirements.txt                    # Dependencies
+├── setup.sh                           # Environment setup script
+├── .gitignore                         # Git ignore rules
+├── BSM_streamlit.py                   # Legacy BS calculator
+├── backend/
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── black_scholes.py          # BS model with Greeks
+│   │   ├── binomial.py               # Binomial tree implementation 
+│   │   ├── monte_carlo.py            # Heston MC model 
+│   │   ├── option_models.py          # Central model interface
+│   │   └── implied_volatility.py     # IV calculation & surface generation
+│   ├── backtesting/
+  │   │   ├── __init__.py
+  │   │   ├── backtesting.ipynb         # Comprehensive analysis notebook
+  │   │   └── backtester.py             # Backtesting framework
+  │   ├── data/                         # SPX options dataset storage
+  │   │   └── all_options_all_dates.csv  # S&P 500 weekly options data
+│   ├── data/
+│   │   ├── __init__.py
+│   │   └── data_fetcher.py           # Real-time data integration
+│   └── utils/
+│       ├── __init__.
+│       └── helpers.py                # Utility functions
+├── frontend/
+│   └── streamlit.py                  # Main Streamlit application
+└── output/                           # Generated reports and plots
+    ├── backtesting/                  # Backtesting results
+    ├── iv_surfaces/                  # IV surface data
+    └── reports/                      # PDF reports
+```
 
-Call option (C) and put option (P) prices are calculated using the following formulas:
+## Installation & Setup
 
-![Call](call-formula.jpg)
-![Put](put-formula.jpg)
+### Prerequisites
+- Python 3.8 or higher
+- Git
 
-The formulas for d1 and d2 are:
+```bash
+# Clone the repository
+git clone [your-repository-url]
+cd quant-options-pricing
 
-![d1](d1-d2-formula.jpg)
+# Run setup script
+chmod +x setup.sh
+./setup.sh
+```
 
-## The Option Greeks
+## 🚀 Quick Start Guide
 
+### 1. Launch Streamlit Application
 
-"The Greeks" measure the sensitivity of the value of an option to changes in parameter values while holding the other parameters fixed. They are partial derivatives of the price with respect to the parameter values.
+```bash
+# Set Python path
+export PYTHONPATH="${PYTHONPATH}:$(pwd)/backend"
 
-The Greeks are important not only in the mathematical theory of finance, but also for those actively trading. Financial institutions will typically set (risk) limit values for each of the Greeks that their traders must not exceed. Delta is the most important Greek since this usually confers the largest risk.
+# Run the main application
+streamlit run frontend/streamlit.py
+```
 
-Their formulas can be seen below:
+The application will open in your browser at `http://localhost:8501`
 
-![Greek Formulas](greeks.png)
+### 2. Run Backtesting Analysis
 
-## Sources
+```bash
+# Jupyter notebook
+jupyter notebook backend/backtesting/backtesting.ipynb
+```
 
+### 3. Data Requirements
 
-Black-Scholes Model Explanation: [Wikipedia](https://en.wikipedia.org/wiki/Black%E2%80%93Scholes_model) and [Investopedia](https://www.investopedia.com/terms/b/blackscholes.asp)
+Use the default SPX options dataset or use your SPX options dataset in `src/backend/data/all_options_all_dates.csv`
 
-Formula Images: [Macroption](https://www.macroption.com/black-scholes-formula/)
+**Expected CSV columns:**
+- `contractSymbol`: Option contract identifier
+- `strike`: Strike price
+- `bid`: Bid price
+- `ask`: Ask price
+- `impliedVolatility`: Market implied volatility
+- `Expiration`: Expiration date
+- `Type`: 'call' or 'put'
+- `lastTradeDate`: Trade date
+- `volume`: Trading volume
+- `openInterest`: Open interest
+
+## App Usage
+
+### Home Page
+- Platform overview and quick start guide
+- Feature summary and statistics
+
+### Option Pricing Calculator
+1. Enter Parameters:
+   - Ticker symbol (e.g., AAPL, SPY)
+   - Option type (Call/Put)
+   - Strike price and expiration
+   - Risk-free rate and volatility
+
+2. Live Data Integration:
+   - Toggle "Use Live Market Data"
+   - Automatic price and volatility fetching
+   - Real-time risk-free rate updates
+
+3. Results Display:
+   - All model prices side-by-side
+   - Complete Greeks calculation
+   - Price sensitivity analysis
+   - Monte Carlo path visualization
+
+### Implied Volatility Surface
+1. Surface Generation:
+   - Enter ticker symbol
+   - Select surface type (3D/Smile/Heatmap)
+   - Choose IV calculation method
+
+2. Analysis Tools:
+   - Interactive 3D volatility surfaces
+   - Volatility smile analysis
+   - Term structure visualization
+   - Surface quality metrics
+
+3. Export Options:
+   - CSV data export
+   - High-resolution plots
+   - Surface statistics summary
+
+### Backtesting:
+1. Configuration:
+   - Set sample size (100-5000)
+   - Adjust risk-free rate
+   - Select analysis period
+
+2. Model Comparison:
+   - Performance metrics (MAE, RMSE, MAPE)
+   - Statistical significance testing
+   - Error distribution analysis
+   - Performance by option characteristics
+
+3. Visualization:
+   - Model accuracy scatter plots
+   - Error distribution box plots
+   - Performance heatmaps
+   - Time series analysis
+
+## Advanced Configurations
+
+### Custom Risk-Free Rate
+```python
+# In your Python scripts
+from backend.data.data_fetcher import DataFetcher
+fetcher = DataFetcher()
+fetcher.risk_free_rate = 0.045  # 4.5%
+```
+
+### Monte Carlo Parameters
+```python
+# Adjust simulation parameters
+from backend.models.option_models import OptionPricingModels
+pricing = OptionPricingModels(S, K, T, r, sigma, option_type)
+mc_price, paths = pricing.new_monte_carlo_option_price(num_simulations=50000)
+```
+
+### Binomial Tree Resolution
+```python
+# Higher resolution binomial tree
+bt_price = pricing.binomial_tree_option_price(N=200)  # 200 steps
+```
+
+## License
+
+MIT License - Open source for educational and research purposes.
