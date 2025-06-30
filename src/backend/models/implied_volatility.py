@@ -18,9 +18,23 @@ class ImpliedVolatilitySurface:
         # Get current stock price
         try:
             stock = yf.Ticker(self.ticker)
-            hist = stock.history(period="1d")
-            self.stock_price = hist['Close'].iloc[-1]
-            return self.stock_price
+            
+            # Try to get latest price from daily data
+            hist = stock.history(period="5d")
+            if not hist.empty:
+                self.stock_price = hist['Close'].iloc[-1]
+                return self.stock_price
+            
+            # Last resort: try info
+            info = stock.info
+            if 'currentPrice' in info and info['currentPrice']:
+                self.stock_price = info['currentPrice']
+                return self.stock_price
+            elif 'regularMarketPrice' in info and info['regularMarketPrice']:
+                self.stock_price = info['regularMarketPrice']
+                return self.stock_price
+            
+            return None
         except Exception as e:
             print(f"Error fetching stock price for {self.ticker}: {e}")
             return None
@@ -32,7 +46,19 @@ class ImpliedVolatilitySurface:
             
             # Get available expiration dates if not provided
             if expiration_dates is None:
-                exp_dates = stock.options[:5]  # Get first 5 expiration dates
+                all_exp_dates = stock.options
+                # Filter out very near-term expiration (less than 7 days) for better surface
+                exp_dates = []
+                today = pd.Timestamp.now().normalize()
+                for exp_date in all_exp_dates:
+                    exp_dt = pd.to_datetime(exp_date)
+                    days_to_exp = (exp_dt - today).days
+                    if 3 <= days_to_exp <= 365:  # Between 3 days and 1 year
+                        exp_dates.append(exp_date)
+                
+                # Take up to 12 expiration dates for maximum surface coverage
+                exp_dates = exp_dates[:12]
+                print(f"Selected expiration dates: {exp_dates}")
             else:
                 exp_dates = expiration_dates
             
@@ -62,8 +88,19 @@ class ImpliedVolatilitySurface:
                     # Combine and filter
                     combined = pd.concat([calls, puts], ignore_index=True)
                     
-                    # Filter out options with zero bid/ask
-                    combined = combined[(combined['bid'] > 0) & (combined['ask'] > 0)]
+                    # Filter for reasonable options (very lenient for maximum surface coverage)
+                    combined = combined[
+                        (combined['bid'] >= 0) &  # Allow zero bid
+                        (combined['ask'] > 0) &   # Must have ask price
+                        (combined['ask'] < 1000)  # Reasonable ask price
+                        # Removed volume/open interest requirement for more data
+                    ]
+                    
+                    # Filter for reasonable strike range (0.3 to 3.0 moneyness for maximum coverage)
+                    combined = combined[
+                        (combined['strike'] >= current_price * 0.3) & 
+                        (combined['strike'] <= current_price * 3.0)
+                    ]
                     
                     options_data.append(combined)
                     
@@ -80,11 +117,19 @@ class ImpliedVolatilitySurface:
                 full_chain['days_to_expiry'] = (full_chain['expiration'] - today).dt.days
                 full_chain['time_to_expiry'] = full_chain['days_to_expiry'] / 365.25
                 
+                # Additional filter for minimum time to expiry (more lenient)
+                full_chain = full_chain[full_chain['days_to_expiry'] >= 3]  # At least 3 days
+                
                 # Add current stock price
                 full_chain['stock_price'] = current_price
                 
+                print(f"Fetched {len(full_chain)} options for {self.ticker}")
+                print(f"Columns available: {list(full_chain.columns)}")
+                print(f"Sample data: {full_chain.head(2)}")
+                
                 return full_chain
             else:
+                print("No options data retrieved")
                 return pd.DataFrame()
                 
         except Exception as e:
@@ -96,6 +141,22 @@ class ImpliedVolatilitySurface:
         if options_df.empty:
             return options_df
         
+        # Check if yfinance already provided implied volatility
+        if 'impliedVolatility' in options_df.columns:
+            # Filter out invalid IV values from yfinance
+            initial_count = len(options_df)
+            options_df = options_df.dropna(subset=['impliedVolatility'])
+            options_df = options_df[(options_df['impliedVolatility'] > 0.001) & (options_df['impliedVolatility'] < 5.0)]
+            
+            print(f"Filtered yfinance IV: {initial_count} -> {len(options_df)} options")
+            
+            # If we have any data from yfinance, use it (lowered threshold)
+            if len(options_df) > 0:
+                print(f"Using yfinance implied volatility data ({len(options_df)} options)")
+                return options_df
+        
+        # Calculate IV manually if yfinance data is insufficient
+        print("Calculating implied volatility manually...")
         iv_list = []
         
         for idx, row in options_df.iterrows():
@@ -116,12 +177,13 @@ class ImpliedVolatilitySurface:
             except Exception as e:
                 iv_list.append(np.nan)
         
-        options_df['calculated_iv'] = iv_list
+        options_df['impliedVolatility'] = iv_list
         
         # Remove rows with invalid IV
-        options_df = options_df.dropna(subset=['calculated_iv'])
-        options_df = options_df[options_df['calculated_iv'] > 0]
+        options_df = options_df.dropna(subset=['impliedVolatility'])
+        options_df = options_df[(options_df['impliedVolatility'] > 0.001) & (options_df['impliedVolatility'] < 5.0)]
         
+        print(f"Calculated IV for {len(options_df)} options")
         return options_df
     
     def generate_surface_plot(self, options_df, surface_type='3d', iv_column='impliedVolatility'):
@@ -129,13 +191,16 @@ class ImpliedVolatilitySurface:
         if options_df.empty:
             return None
         
-        # Filter for reasonable strikes (around ATM)
+        # Use much broader strike range for surface visualization
         current_price = options_df['stock_price'].iloc[0]
-        strike_range = (current_price * 0.8, current_price * 1.2)
+        # Use much wider range: 0.4 to 2.5 moneyness for maximum surface coverage
+        strike_range = (current_price * 0.4, current_price * 2.5)
         filtered_df = options_df[
             (options_df['strike'] >= strike_range[0]) & 
             (options_df['strike'] <= strike_range[1])
         ].copy()
+        
+        print(f"Surface plot using {len(filtered_df)} options (strike range: {strike_range[0]:.0f} - {strike_range[1]:.0f})")
         
         if filtered_df.empty:
             return None
@@ -150,45 +215,86 @@ class ImpliedVolatilitySurface:
         if surface_type == '3d':
             fig = go.Figure()
             
-            # Add call surface
-            if not calls.empty:
-                fig.add_trace(go.Scatter3d(
-                    x=calls['days_to_expiry'],
-                    y=calls['moneyness'],
-                    z=calls[iv_column] * 100,  # Convert to percentage
-                    mode='markers',
-                    marker=dict(
-                        size=3,
-                        color='blue',
-                        opacity=0.7
-                    ),
-                    name='Calls'
-                ))
-            
-            # Add put surface
-            if not puts.empty:
-                fig.add_trace(go.Scatter3d(
-                    x=puts['days_to_expiry'],
-                    y=puts['moneyness'],
-                    z=puts[iv_column] * 100,  # Convert to percentage
-                    mode='markers',
-                    marker=dict(
-                        size=3,
-                        color='red',
-                        opacity=0.7
-                    ),
-                    name='Puts'
-                ))
+            # Combine calls and puts for smoother surface
+            if not filtered_df.empty:
+                # Create a grid for surface interpolation
+                from scipy.interpolate import griddata
+                
+                # Prepare data for interpolation (if we have enough points)
+                if len(filtered_df) >= 4:  # Need minimum points for surface (reduced threshold)
+                    x = filtered_df['days_to_expiry'].values
+                    y = filtered_df['moneyness'].values  
+                    z = filtered_df[iv_column].values * 100  # Convert to percentage
+                    
+                    # Additional filtering for realistic IV values in surface (more lenient)
+                    valid_mask = (z >= 0.1) & (z <= 500)  # 0.1% to 500% IV
+                    x, y, z = x[valid_mask], y[valid_mask], z[valid_mask]
+                    
+                    if len(x) >= 3:  # Still have enough points after filtering (reduced threshold)
+                        # Create a regular grid
+                        x_range = np.linspace(x.min(), x.max(), 15)
+                        y_range = np.linspace(y.min(), y.max(), 15)
+                        X, Y = np.meshgrid(x_range, y_range)
+                        
+                        # Interpolate IV values onto the grid
+                        try:
+                            Z = griddata((x, y), z, (X, Y), method='linear', fill_value=np.nan)
+                            
+                            # Add surface plot
+                            fig.add_trace(go.Surface(
+                                x=X,
+                                y=Y,
+                                z=Z,
+                                colorscale='Viridis',
+                                name='IV Surface',
+                                opacity=0.8,
+                                colorbar=dict(title="IV (%)")
+                            ))
+                        except Exception as e:
+                            print(f"Surface interpolation failed: {e}")
+                            # Continue to scatter plot fallback
+                
+                # Add scatter points for actual data
+                if not calls.empty:
+                    fig.add_trace(go.Scatter3d(
+                        x=calls['days_to_expiry'],
+                        y=calls['moneyness'],
+                        z=calls[iv_column] * 100,
+                        mode='markers',
+                        marker=dict(
+                            size=4,
+                            color='blue',
+                            opacity=0.8
+                        ),
+                        name='Call Options'
+                    ))
+                
+                if not puts.empty:
+                    fig.add_trace(go.Scatter3d(
+                        x=puts['days_to_expiry'],
+                        y=puts['moneyness'],
+                        z=puts[iv_column] * 100,
+                        mode='markers',
+                        marker=dict(
+                            size=4,
+                            color='red',
+                            opacity=0.8
+                        ),
+                        name='Put Options'
+                    ))
             
             fig.update_layout(
                 title=f'Implied Volatility Surface - {self.ticker}',
                 scene=dict(
                     xaxis_title='Days to Expiration',
                     yaxis_title='Moneyness (K/S)',
-                    zaxis_title='Implied Volatility (%)'
+                    zaxis_title='Implied Volatility (%)',
+                    camera=dict(
+                        eye=dict(x=1.87, y=0.88, z=-0.64)
+                    )
                 ),
-                width=800,
-                height=600
+                width=900,
+                height=700
             )
             
         elif surface_type == 'heatmap':
@@ -248,18 +354,20 @@ class ImpliedVolatilitySurface:
         fig = go.Figure()
         
         if not calls.empty:
+            calls_sorted = calls.sort_values('moneyness')
             fig.add_trace(go.Scatter(
-                x=calls['moneyness'],
-                y=calls['impliedVolatility'] * 100,
+                x=calls_sorted['moneyness'],
+                y=calls_sorted['impliedVolatility'] * 100,
                 mode='markers+lines',
                 name='Calls',
                 marker=dict(color='blue')
             ))
         
         if not puts.empty:
+            puts_sorted = puts.sort_values('moneyness')
             fig.add_trace(go.Scatter(
-                x=puts['moneyness'],
-                y=puts['impliedVolatility'] * 100,
+                x=puts_sorted['moneyness'],
+                y=puts_sorted['impliedVolatility'] * 100,
                 mode='markers+lines',
                 name='Puts',
                 marker=dict(color='red')

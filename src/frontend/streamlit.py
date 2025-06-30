@@ -922,8 +922,10 @@ elif st.session_state.current_page == "Implied Volatility Surface":
                                         st.success(f"Data exported to {filepath}")
                         else:
                             st.error("No valid options data found after IV calculation")
+                            st.info("💡 Try a different ticker symbol (e.g., AAPL, MSFT, GOOGL) or check if markets are open")
                     else:
                         st.error(f"No options data found for {st.session_state.iv_ticker_selected}")
+                        st.info("💡 Make sure the ticker symbol is correct and has active options")
                         
                 except Exception as e:
                     st.error(f"Error generating IV surface: {e}")
