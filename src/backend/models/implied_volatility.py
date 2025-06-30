@@ -205,7 +205,7 @@ class ImpliedVolatilitySurface:
                 x=pivot_data.columns,
                 y=pivot_data.index,
                 colorscale='Viridis',
-                colorbar=dict(title='IV (%)')
+                colorbar=dict(title=dict(text='IV (%)'))
             ))
             
             fig.update_layout(

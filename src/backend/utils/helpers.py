@@ -211,7 +211,7 @@ def create_greeks_heatmap(greeks_data, greek_name):
         z=greeks_data,
         colorscale='RdBu',
         zmid=0,
-        colorbar=dict(title=greek_name.title())
+        colorbar=dict(title=dict(text=greek_name.title()))
     ))
     
     fig.update_layout(
