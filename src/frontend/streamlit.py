@@ -107,6 +107,30 @@ st.markdown("""
         font-weight: 600;
     }
     
+    /* Override all Streamlit headers to use Satoshi */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Satoshi', sans-serif !important;
+        color: #ffffff !important;
+    }
+    
+    /* Streamlit markdown headers */
+    .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown h4, .stMarkdown h5, .stMarkdown h6 {
+        font-family: 'Satoshi', sans-serif !important;
+        color: #ffffff !important;
+    }
+    
+    /* Metric labels */
+    [data-testid="metric-container"] [data-testid="metric-container-label"] {
+        font-family: 'Satoshi', sans-serif !important;
+        color: #ffffff !important;
+    }
+    
+    /* Tab headers */
+    .stTabs [data-baseweb="tab-list"] [data-baseweb="tab"] {
+        font-family: 'Satoshi', sans-serif !important;
+        color: #ffffff !important;
+    }
+    
     /* Monospace labels */
     .monospace-label {
         font-family: 'Courier New', monospace;
