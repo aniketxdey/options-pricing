@@ -1,14 +1,15 @@
 # Options Pricing & Implied Volaitlity Surface Platform
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.8+](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
+
 Comprehensive options pricing and analysis application with multiple financial and machine learning models for options pricing. The app provides real-time pricing, backtesting capabilities, and professional-grade analytics through an intuitive Streamlit web interface.
+
+[**Live Demo**](https://advancedoptionspricing.streamlit.app/)
 
 <img width="1458" alt="Screenshot 2025-06-29 at 10 13 47 PM" src="https://github.com/user-attachments/assets/49e4f22c-c44f-4ffb-80eb-2a2e56947e1e" />
 
 <img width="1416" alt="Screenshot 2025-06-29 at 10 13 57 PM" src="https://github.com/user-attachments/assets/72612a03-9529-4235-ba39-1f1ab71ab12d" />
-
-
-## Live Demo
-[**Click Here**](https://advancedoptionspricing.streamlit.app/)
 
 ## Pricing Models
 1. Black-Scholes Model:
@@ -23,19 +24,26 @@ Comprehensive options pricing and analysis application with multiple financial a
 <img width="1451" alt="Screenshot 2025-06-29 at 10 14 15 PM" src="https://github.com/user-attachments/assets/523e8233-f544-49af-a2d5-7efebd2345ff" />
 
 ## Backtesting: 
-- The application features a comprehensive historical backtesting engine using SPX options data
+- Pricing models are calibrated via a comprehensive historical backtesting engine using SPX options data
 - Data is pre-processed and filtered to only yield high-quality contracts, and predicted vs. actual prices are measured
 - Models are calibrated to SPX surfaces & optimized for backtesting
 
 ![Screenshot 2025-06-30 at 12 14 47 AM](https://github.com/user-attachments/assets/9ea0b4ed-6836-4558-b196-25e6eb4e2d60)
 
 ## Features
-- Real-time Data Integration - Live stock prices via Yahoo Finance API
-- Performance Metrics - MAE, RMSE, percentage errors across all models
-- Interactive Visualizations- 3D surface plots, heatmaps, convergence analysis, 3D volatility surfaces across strikes and expirations
-- PDF Report Generation - Detailed backtesting and pricing reports
+
+- Option Pricing Calculatior
+- Performance Metrics:
+    - MAE, RMSE, percentage errors across all models
+    - Statistical significance testing
+    - Error distribution analysis
+    - Performance by option characteristics
+- Interactive Visualizations:
+    - 3D heatmaps & convergence analysis for pricing models
+    - Model accuracy scatter plots & error distribution box plots for backtesting
+    - 3D volatility surfaces across strikes and expirations for volatility smile analysis
 - Model Comparison Charts - Side-by-side accuracy analysis
-- Monte Carlo Analytics - Path simulations, payoff distributions, convergence plots
+- Real-time Data Integration - Live stock prices via Yahoo Finance API
 
 - <img width="740" alt="Screenshot 2025-06-29 at 10 14 27 PM" src="https://github.com/user-attachments/assets/fb9d24a3-b063-4c2e-b18b-cdb4f978f6ac" />
 
@@ -143,15 +151,10 @@ Use the default SPX options dataset or use your SPX options dataset in `src/back
 
 2. Model Comparison:
    - Performance metrics (MAE, RMSE, MAPE)
-   - Statistical significance testing
-   - Error distribution analysis
-   - Performance by option characteristics
+
 
 3. Visualization:
-   - Model accuracy scatter plots
-   - Error distribution box plots
-   - Performance heatmaps
-   - Time series analysis
+   
 
 ## Advanced Configurations
 
