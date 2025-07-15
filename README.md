@@ -39,49 +39,13 @@ Comprehensive options pricing and analysis application with multiple financial a
 
 - <img width="740" alt="Screenshot 2025-06-29 at 10 14 27 PM" src="https://github.com/user-attachments/assets/fb9d24a3-b063-4c2e-b18b-cdb4f978f6ac" />
 
-
-## Project Structure
-
-```
-quant-options-pricing/
-├── README.md                           # Project documentation
-├── literature.md                       # Detailed literature review & math for BS Model
-├── requirements.txt                    # Dependencies
-├── setup.sh                           # Environment setup script
-├── .gitignore                         # Git ignore rules
-├── backend/
-│   ├── models/
-│   │   ├── __init__.py
-│   │   ├── black_scholes.py          # BS model with Greeks
-│   │   ├── binomial.py               # Binomial tree implementation 
-│   │   ├── monte_carlo.py            # Heston MC model 
-│   │   ├── option_models.py          # Central model interface
-│   │   └── implied_volatility.py     # IV calculation & surface generation
-│   ├── backtesting/
-  │   │   ├── __init__.py
-  │   │   ├── backtesting.ipynb         # Comprehensive analysis notebook
-  │   │   └── backtester.py             # Backtesting framework
-  │   ├── data/                         # SPX options dataset storage
-  │   │   └── all_options_all_dates.csv  # S&P 500 weekly options data
-│   ├── data/
-│   │   ├── __init__.py
-│   │   └── data_fetcher.py           # Real-time data integration
-│   └── utils/
-│       ├── __init__.
-│       └── helpers.py                # Utility functions
-├── frontend/
-│   └── streamlit.py                  # Main Streamlit application
-└── output/                           # Generated reports and plots
-    ├── backtesting/                  # Backtesting results
-    ├── iv_surfaces/                  # IV surface data
-    └── reports/                      # PDF reports
-```
-
-## Installation & Setup
+## Usage
 
 ### Prerequisites
 - Python 3.8 or higher
 - Git
+
+### Installation
 
 ```bash
 # Clone the repository
@@ -93,9 +57,9 @@ chmod +x setup.sh
 ./setup.sh
 ```
 
-## 🚀 Quick Start Guide
+### Quick Start
 
-### 1. Launch Streamlit Application
+#### 1. Launch Streamlit Application
 
 ```bash
 # Set Python path
@@ -107,14 +71,14 @@ streamlit run frontend/streamlit.py
 
 The application will open in your browser at `http://localhost:8501`
 
-### 2. Run Backtesting Analysis
+#### 2. Run Backtesting Analysis
 
 ```bash
 # Jupyter notebook
 jupyter notebook backend/backtesting/backtesting.ipynb
 ```
 
-### 3. Data Requirements
+#### 3. Data Requirements
 
 Use the default SPX options dataset or use your SPX options dataset in `src/backend/data/all_options_all_dates.csv`
 
