@@ -1,6 +1,6 @@
 # Options Pricing & Implied Volaitlity Surface Platform
 
-A comprehensive options pricing and analysis application that enables multiple financial and machine learning models for options pricing. The app provides real-time pricing, backtesting capabilities, and professional-grade analytics through an intuitive Streamlit web interface.
+Comprehensive options pricing and analysis application with multiple financial and machine learning models for options pricing. The app provides real-time pricing, backtesting capabilities, and professional-grade analytics through an intuitive Streamlit web interface.
 
 <img width="1458" alt="Screenshot 2025-06-29 at 10 13 47 PM" src="https://github.com/user-attachments/assets/49e4f22c-c44f-4ffb-80eb-2a2e56947e1e" />
 
