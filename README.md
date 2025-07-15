@@ -32,7 +32,11 @@ Comprehensive options pricing and analysis application with multiple financial a
 
 ## Features
 
-- Option Pricing Calculatior
+- Option Pricing Calculator:
+   - Paraneters: Ticker symbol, option type (Call/Put), strike price and expiration, risk-free rate and volatility (Use Live Market Data/Historical)
+   - Automatic price and volatility fetching; real-time risk-free rate updates
+   - All model prices display side-by-side with complete Greeks calculation
+   - Price sensitivity analysis & Monte Carlo path visualization
 - Performance Metrics:
     - MAE, RMSE, percentage errors across all models
     - Statistical significance testing
@@ -42,8 +46,6 @@ Comprehensive options pricing and analysis application with multiple financial a
     - 3D heatmaps & convergence analysis for pricing models
     - Model accuracy scatter plots & error distribution box plots for backtesting
     - 3D volatility surfaces across strikes and expirations for volatility smile analysis
-- Model Comparison Charts - Side-by-side accuracy analysis
-- Real-time Data Integration - Live stock prices via Yahoo Finance API
 
 - <img width="740" alt="Screenshot 2025-06-29 at 10 14 27 PM" src="https://github.com/user-attachments/assets/fb9d24a3-b063-4c2e-b18b-cdb4f978f6ac" />
 
@@ -101,60 +103,6 @@ Use the default SPX options dataset or use your SPX options dataset in `src/back
 - `lastTradeDate`: Trade date
 - `volume`: Trading volume
 - `openInterest`: Open interest
-
-## App Usage
-
-### Home Page
-- Platform overview and quick start guide
-- Feature summary and statistics
-
-### Option Pricing Calculator
-1. Enter Parameters:
-   - Ticker symbol (e.g., AAPL, SPY)
-   - Option type (Call/Put)
-   - Strike price and expiration
-   - Risk-free rate and volatility
-
-2. Live Data Integration:
-   - Toggle "Use Live Market Data"
-   - Automatic price and volatility fetching
-   - Real-time risk-free rate updates
-
-3. Results Display:
-   - All model prices side-by-side
-   - Complete Greeks calculation
-   - Price sensitivity analysis
-   - Monte Carlo path visualization
-
-### Implied Volatility Surface
-1. Surface Generation:
-   - Enter ticker symbol
-   - Select surface type (3D/Smile/Heatmap)
-   - Choose IV calculation method
-
-2. Analysis Tools:
-   - Interactive 3D volatility surfaces
-   - Volatility smile analysis
-   - Term structure visualization
-   - Surface quality metrics
-
-3. Export Options:
-   - CSV data export
-   - High-resolution plots
-   - Surface statistics summary
-
-### Backtesting:
-1. Configuration:
-   - Set sample size (100-5000)
-   - Adjust risk-free rate
-   - Select analysis period
-
-2. Model Comparison:
-   - Performance metrics (MAE, RMSE, MAPE)
-
-
-3. Visualization:
-   
 
 ## Advanced Configurations
 
