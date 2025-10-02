@@ -1,8 +1,5 @@
 # Options Pricing & Implied Volaitlity Surface Platform
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.8+](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
-
 Comprehensive options pricing and analysis application with multiple financial and machine learning models for options pricing. The app provides real-time pricing, backtesting capabilities, and professional-grade analytics through an intuitive Streamlit web interface.
 
 [**Live Demo**](https://advancedoptionspricing.streamlit.app/)
