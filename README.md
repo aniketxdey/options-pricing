@@ -8,16 +8,14 @@ Quantra is an online, educational options pricing and analysis platform that pro
 
 ## Pricing Infrastructure
 
-
-  
-<img width="1451" alt="Screenshot 2025-06-29 at 10 14 15 PM" src="https://github.com/user-attachments/assets/523e8233-f544-49af-a2d5-7efebd2345ff" />
+<img width="1114" height="857" alt="Screenshot 2026-05-03 at 5 20 47 PM" src="https://github.com/user-attachments/assets/e6a0460e-5bf9-4358-992e-ebf451f732d1" />
 
 ### Backtesting
 - Pricing models are calibrated via a comprehensive historical backtesting engine using SPX options data
 - Data is pre-processed and filtered to only yield high-quality contracts, and predicted vs. actual prices are measured
 - Models are calibrated to SPX surfaces & optimized for backtesting
 
-<img width="1114" height="857" alt="Screenshot 2026-05-03 at 5 20 47 PM" src="https://github.com/user-attachments/assets/e6a0460e-5bf9-4358-992e-ebf451f732d1" />
+
 
 
 ## Features
