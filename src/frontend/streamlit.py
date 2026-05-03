@@ -1197,7 +1197,6 @@ elif st.session_state.current_page == "Implied Volatility Surface":
     controls, viewport = st.columns([1, 2.2], gap="large")
 
     with controls:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
         section_label("Controls")
         mono_label("ticker_symbol")
         iv_ticker = st.text_input("iv_ticker_symbol", value="SPY", key="iv_ticker", label_visibility="collapsed")
@@ -1211,7 +1210,10 @@ elif st.session_state.current_page == "Implied Volatility Surface":
             st.session_state.iv_ticker_selected = iv_ticker
             st.session_state.iv_surface_type = surface_type
             st.session_state.iv_method_selected = iv_method
-        st.markdown("</div>", unsafe_allow_html=True)
+
+    # Holds (iv_surface, options_with_iv, stats) once a successful run completes,
+    # so the full-width Diagnostics section below can render without re-fetching.
+    iv_run = None
 
     with viewport:
         if getattr(st.session_state, "iv_surface_generated", False):
@@ -1250,25 +1252,7 @@ elif st.session_state.current_page == "Implied Volatility Surface":
                                 st.plotly_chart(style_fig(fig, height=620, scene=is_scene), use_container_width=True)
 
                             stats = iv_surface.calculate_surface_statistics(options_with_iv)
-                            divider()
-                            section_label("Surface Diagnostics")
-                            sc1, sc2, sc3 = st.columns(3, gap="medium")
-                            with sc1:
-                                st.metric("Current Price", f"${stats.get('current_price', 0):.2f}")
-                                st.metric("ATM IV (short)", f"{stats.get('atm_iv_short', 0)*100:.1f}%")
-                            with sc2:
-                                st.metric("ATM IV (long)", f"{stats.get('atm_iv_long', 0)*100:.1f}%")
-                                st.metric("Term-structure Slope", f"{stats.get('term_structure_slope', 0)*100:.2f}%")
-                            with sc3:
-                                st.metric("Skew", f"{stats.get('skew', 0)*100:.2f}%")
-                                st.metric("Contracts", f"{stats.get('total_options', 0):,}")
-
-                            with st.expander("Raw contract table & export"):
-                                st.dataframe(options_with_iv.head(100), use_container_width=True)
-                                if st.button("Export to CSV", key="iv_export"):
-                                    filepath = iv_surface.export_iv_data(options_with_iv)
-                                    if filepath:
-                                        st.success(f"Exported → {filepath}")
+                            iv_run = (iv_surface, options_with_iv, stats)
                         else:
                             st.error("No valid IV values after solving.")
                             st.info("Try a different ticker (AAPL, MSFT, GOOGL) or verify markets are open.")
@@ -1289,6 +1273,30 @@ elif st.session_state.current_page == "Implied Volatility Surface":
                 """,
                 unsafe_allow_html=True,
             )
+
+    # Full-width Surface Diagnostics + raw-data expander, rendered below the
+    # two-column controls/surface area.
+    if iv_run is not None:
+        iv_surface, options_with_iv, stats = iv_run
+        divider()
+        section_label("Surface Diagnostics")
+        sc1, sc2, sc3 = st.columns(3, gap="medium")
+        with sc1:
+            st.metric("Current Price", f"${stats.get('current_price', 0):.2f}")
+            st.metric("ATM IV (short)", f"{stats.get('atm_iv_short', 0)*100:.1f}%")
+        with sc2:
+            st.metric("ATM IV (long)", f"{stats.get('atm_iv_long', 0)*100:.1f}%")
+            st.metric("Term-structure Slope", f"{stats.get('term_structure_slope', 0)*100:.2f}%")
+        with sc3:
+            st.metric("Skew", f"{stats.get('skew', 0)*100:.2f}%")
+            st.metric("Contracts", f"{stats.get('total_options', 0):,}")
+
+        with st.expander("Raw contract table & export"):
+            st.dataframe(options_with_iv.head(100), use_container_width=True)
+            if st.button("Export to CSV", key="iv_export"):
+                filepath = iv_surface.export_iv_data(options_with_iv)
+                if filepath:
+                    st.success(f"Exported → {filepath}")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1316,7 +1324,6 @@ elif st.session_state.current_page == "Backtesting Results":
     controls, viewport = st.columns([1, 2.2], gap="large")
 
     with controls:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
         section_label("Run Parameters")
         mono_label("sample_size")
         backtest_sample_size = st.slider("sample_size", min_value=100, max_value=5000, value=1000, step=100, label_visibility="collapsed")
@@ -1324,7 +1331,6 @@ elif st.session_state.current_page == "Backtesting Results":
         risk_free_rate_bt = st.number_input("risk_free_rate_percent", min_value=0.0, value=5.0, step=0.1, key="bt_rf", label_visibility="collapsed") / 100
         st.write("")
         run_backtest = st.button("Run SPX backtest", type="primary", key="bt_go", use_container_width=True)
-        st.markdown("</div>", unsafe_allow_html=True)
 
         st.markdown(
             """
@@ -1360,7 +1366,7 @@ elif st.session_state.current_page == "Backtesting Results":
             results = st.session_state.backtest_results
             st.success(f"Displaying {len(results):,} contracts.")
 
-            # Performance summary
+            # Performance summary stays in the right column, alongside Run Parameters
             section_label("Performance Summary")
             model_columns = [col for col in results.columns if col.endswith("_price")]
             metrics_data = []
@@ -1376,64 +1382,6 @@ elif st.session_state.current_page == "Backtesting Results":
                 metrics_df = pd.DataFrame(metrics_data)
                 st.dataframe(metrics_df, use_container_width=True, hide_index=True)
 
-            # Model comparison scatter
-            if len(model_columns) >= 2:
-                divider()
-                section_label("Predicted vs Actual")
-                palette = [ACCENT, ACCENT_SECONDARY, "#6366F1", "#0EA5E9"]
-                fig = go.Figure()
-                for i, col in enumerate(model_columns[:4]):
-                    model_name = col.replace("_price", "")
-                    fig.add_trace(
-                        go.Scatter(
-                            x=results["mid_price"], y=results[col],
-                            mode="markers",
-                            name=model_name,
-                            marker=dict(color=palette[i % len(palette)], size=6, opacity=0.55, line=dict(width=0)),
-                            hovertemplate=f"{model_name}<br>Actual: $%{{x:.2f}}<br>Predicted: $%{{y:.2f}}<extra></extra>",
-                        )
-                    )
-                min_price = results["mid_price"].min()
-                max_price = results["mid_price"].max()
-                fig.add_trace(
-                    go.Scatter(
-                        x=[min_price, max_price], y=[min_price, max_price],
-                        mode="lines", name="Perfect prediction",
-                        line=dict(dash="dash", color=FOREGROUND, width=1.5),
-                        hoverinfo="skip",
-                    )
-                )
-                fig.update_layout(title="Model predictions vs observed mid price", xaxis_title="Observed mid ($)", yaxis_title="Model price ($)")
-                st.plotly_chart(style_fig(fig, height=620), use_container_width=True)
-
-            # Dataset info
-            divider()
-            section_label("Dataset")
-            ds1, ds2, ds3, ds4 = st.columns(4, gap="small")
-            with ds1: st.metric("Contracts", f"{len(results):,}")
-            with ds2: st.metric("Trade days", f"{results['trade_date'].nunique()}")
-            with ds3:
-                strike_col = "strike_price" if "strike_price" in results.columns else "strike"
-                st.metric("Strike range", f"${results[strike_col].min():.0f} – ${results[strike_col].max():.0f}")
-            with ds4: st.metric("Avg DTE", f"{results['days_to_expiry'].mean():.0f} d")
-
-            divider()
-            c_dl, c_new = st.columns([1, 1])
-            with c_dl:
-                csv = results.to_csv(index=False)
-                st.download_button(
-                    label="Download results (CSV)",
-                    data=csv,
-                    file_name=f"spx_backtest_results_{datetime.now().strftime('%Y%m%d')}.csv",
-                    mime="text/csv",
-                    use_container_width=True,
-                )
-            with c_new:
-                if st.button("Run a new backtest", use_container_width=True):
-                    st.session_state.backtest_completed = False
-                    st.session_state.backtest_results = None
-                    st.rerun()
-
         else:
             st.markdown(
                 """
@@ -1447,6 +1395,74 @@ elif st.session_state.current_page == "Backtesting Results":
                 """,
                 unsafe_allow_html=True,
             )
+
+    # Full-width sections below the two-column area; only render once a backtest
+    # has produced results.
+    if (
+        getattr(st.session_state, "backtest_completed", False)
+        and hasattr(st.session_state, "backtest_results")
+        and not getattr(st.session_state, "backtesting_running", False)
+    ):
+        results = st.session_state.backtest_results
+        model_columns = [col for col in results.columns if col.endswith("_price")]
+
+        # Predicted vs Actual scatter — full width, its own section
+        if len(model_columns) >= 2:
+            divider()
+            section_label("Predicted vs Actual")
+            palette = [ACCENT, ACCENT_SECONDARY, "#6366F1", "#0EA5E9"]
+            fig = go.Figure()
+            for i, col in enumerate(model_columns[:4]):
+                model_name = col.replace("_price", "")
+                fig.add_trace(
+                    go.Scatter(
+                        x=results["mid_price"], y=results[col],
+                        mode="markers",
+                        name=model_name,
+                        marker=dict(color=palette[i % len(palette)], size=6, opacity=0.55, line=dict(width=0)),
+                        hovertemplate=f"{model_name}<br>Actual: $%{{x:.2f}}<br>Predicted: $%{{y:.2f}}<extra></extra>",
+                    )
+                )
+            min_price = results["mid_price"].min()
+            max_price = results["mid_price"].max()
+            fig.add_trace(
+                go.Scatter(
+                    x=[min_price, max_price], y=[min_price, max_price],
+                    mode="lines", name="Perfect prediction",
+                    line=dict(dash="dash", color=FOREGROUND, width=1.5),
+                    hoverinfo="skip",
+                )
+            )
+            fig.update_layout(title="Model predictions vs observed mid price", xaxis_title="Observed mid ($)", yaxis_title="Model price ($)")
+            st.plotly_chart(style_fig(fig, height=620), use_container_width=True)
+
+        # Dataset info
+        divider()
+        section_label("Dataset")
+        ds1, ds2, ds3, ds4 = st.columns(4, gap="small")
+        with ds1: st.metric("Contracts", f"{len(results):,}")
+        with ds2: st.metric("Trade days", f"{results['trade_date'].nunique()}")
+        with ds3:
+            strike_col = "strike_price" if "strike_price" in results.columns else "strike"
+            st.metric("Strike range", f"${results[strike_col].min():.0f} – ${results[strike_col].max():.0f}")
+        with ds4: st.metric("Avg DTE", f"{results['days_to_expiry'].mean():.0f} d")
+
+        divider()
+        c_dl, c_new = st.columns([1, 1])
+        with c_dl:
+            csv = results.to_csv(index=False)
+            st.download_button(
+                label="Download results (CSV)",
+                data=csv,
+                file_name=f"spx_backtest_results_{datetime.now().strftime('%Y%m%d')}.csv",
+                mime="text/csv",
+                use_container_width=True,
+            )
+        with c_new:
+            if st.button("Run a new backtest", use_container_width=True):
+                st.session_state.backtest_completed = False
+                st.session_state.backtest_results = None
+                st.rerun()
 
 
 # ─────────────────────────────────────────────────────────────────────────────

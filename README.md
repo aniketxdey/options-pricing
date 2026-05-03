@@ -4,148 +4,101 @@ Quantra is an online, educational options pricing and analysis platform that pro
 
 [**Website Link**](https://advancedoptionspricing.streamlit.app/)
 
-<img width="1119" height="729" alt="Screenshot 2026-05-03 at 5 19 28 PM" src="https://github.com/user-attachments/assets/c842c3f6-204f-4117-809e-ce0855d2a3d3" />
+<img width="1119" height="729" alt="Screenshot 2026-05-03 at 5 19 28 PM" src="https://github.com/user-attachments/assets/c842c3f6-204f-4117-809e-ce0855d2a3d3" />
 
-## Pricing Infrastructure
+## Pricing
 
-<img width="1117" height="828" alt="Screenshot 2026-05-03 at 5 19 16 PM" src="https://github.com/user-attachments/assets/b7775344-f47d-4cd2-9c26-a907863308f7" />
+The pricing page values any listed option in real time. It pulls live quotes from YFinance, runs three independent pricing models on the same parameters, and shows the results side by side so model disagreement is visible at a glance.
 
+- Live data fetched from YFinance: stock price, 30-day realized volatility, and the underlying chain
+- Three pricing models calibrated in parallel: Black-Scholes (closed-form), Binomial Tree (Cox-Ross-Rubinstein, 100 steps), and Monte Carlo (10,000 GBM paths)
+- Greeks computed two ways on the same view: analytical Greeks from the BS pricer, and numerical Greeks via central differences. The two are placed next to each other so the numerical pipeline can be checked against the closed form.
+- Sensitivity chart that plots option value across an 80% to 120% spot range, with current spot and strike marked
+- Hedging panel: enter a contract count and the page returns portfolio delta, gamma, vega, theta, the share count needed for delta-neutral hedging, and the dollar notional of that hedge
+- Live volatility smile pulled for the chosen ticker after the calculation runs
 
-<img width="1049" height="751" alt="Screenshot 2026-05-03 at 5 27 15 PM" src="https://github.com/user-attachments/assets/3115e85f-a0b4-428c-a7db-3f23d5da9f49" />
+<img width="1117" height="828" alt="Screenshot 2026-05-03 at 5 19 16 PM" src="https://github.com/user-attachments/assets/b7775344-f47d-4cd2-9c26-a907863308f7" />
 
+## Volatility Surface
 
-<img width="1114" height="857" alt="Screenshot 2026-05-03 at 5 20 47 PM" src="https://github.com/user-attachments/assets/c3371128-b064-40dc-b45d-6bbbc9b54860" />
+Fits an implied volatility surface to the live YFinance options chain for any ticker. Three solver options and three view modes cover the common workflows in surface analysis.
 
+- IV solvers: Brent, Newton-Raphson, and Bisection, with automatic fallback if a solver fails to converge
+- Three views of the same data: 3D surface, volatility smile across strikes for the nearest expiry, and a heatmap of moneyness vs days-to-expiry
+- Surface diagnostics: current spot, ATM IV at short and long expiries, term-structure slope, skew, and total contract count
+- Raw contract table with one-click CSV export so the fit can be carried into other tools
 
-### Backtesting
-- Pricing models are calibrated via a comprehensive historical backtesting engine using SPX options data
-- Data is pre-processed and filtered to only yield high-quality contracts, and predicted vs. actual prices are measured
-- Models are calibrated to SPX surfaces & optimized for backtesting
+<img width="1049" height="751" alt="Screenshot 2026-05-03 at 5 27 15 PM" src="https://github.com/user-attachments/assets/3115e85f-a0b4-428c-a7db-3f23d5da9f49" />
 
+## Backtesting
 
+Replays the model stack against historical SPX options data and scores every model on per-contract pricing error.
 
+- Sample size slider from 100 to 5,000 concurrent contracts per run
+- Re-prices each contract with the three traditional models plus five scikit-learn baselines: Random Forest, two Gradient Boosting variants, Linear Regression, and SVR
+- Performance summary table with MAE, RMSE, and MAPE for every model
+- Full-width predicted-vs-actual scatter with a perfect-prediction reference line, so systematic bias by price level is easy to spot
+- Dataset metrics: contract count, distinct trade days, strike range, and average days-to-expiry
+- One-click CSV export of the full result set
 
-## Features
+<img width="1114" height="857" alt="Screenshot 2026-05-03 at 5 20 47 PM" src="https://github.com/user-attachments/assets/c3371128-b064-40dc-b45d-6bbbc9b54860" />
 
-
-### 1. Option Pricing Calculator
-
-   - Parameters: Ticker symbol, option type (Call/Put), strike price and expiration, risk-free rate and volatility (Use Live Market Data/Historical)
-   - Automatic price and volatility fetching; real-time risk-free rate updates
-   - All model prices display side-by-side with complete Greeks calculation
-   - Price sensitivity analysis & Monte Carlo path visualization
-- Performance Metrics:
-    - MAE, RMSE, percentage errors across all models
-    - Statistical significance testing
-    - Error distribution analysis
-    - Performance by option characteristics
-
-
-** Models **
-1. Black-Scholes Model:
-    - Analytical European option pricing with complete Greeks
-    - See detailed literature & research notes in `literature.md`
-    - Black, F. and Scholes, M. (1973). The Pricing of Options and Corporate Liabilities. Journal of Political Economy, 81(3), 637-654
-2. Monte Carlo Simulation:
-    - Heston stochastic volatility model with multi-path visualization  
-3. Binomial Tree Method:
-     - Discrete-time lattice approach for American/European options
-       
-   - Parameters: Ticker symbol, option type (Call/Put), strike price and expiration, risk-free rate and volatility (Use Live Market Data/Historical)
-   - Automatic price and volatility fetching; real-time risk-free rate updates
-   - All model prices display side-by-side with complete Greeks calculation
-   - Price sensitivity analysis & Monte Carlo path visualization
-- Performance Metrics:
-    - MAE, RMSE, percentage errors across all models
-    - Statistical significance testing
-    - Error distribution analysis
-    - Performance by option characteristics
-- Interactive Visualizations:
-    - 3D heatmaps & convergence analysis for pricing models
-    - Model accuracy scatter plots & error distribution box plots for backtesting
-    - 3D volatility surfaces across strikes and expirations for volatility smile analysis
-
-- <img width="740" alt="Screenshot 2025-06-29 at 10 14 27 PM" src="https://github.com/user-attachments/assets/fb9d24a3-b063-4c2e-b18b-cdb4f978f6ac" />
-
-## Usage
-
-### Prerequisites
-- Python 3.8 or higher
-- Git
-
-### Installation
+## Quick Start
 
 ```bash
-# Clone the repository
-git clone [your-repository-url]
-cd quant-options-pricing
+git clone https://github.com/aniketxdey/options-pricing.git
+cd options-pricing
 
-# Run setup script
-chmod +x setup.sh
-./setup.sh
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+streamlit run streamlit_app.py
 ```
 
-### Quick Start
+The app opens at `http://localhost:8501`.
 
-#### 1. Launch Streamlit Application
+## Data Requirements
 
-```bash
-# Set Python path
-export PYTHONPATH="${PYTHONPATH}:$(pwd)/backend"
+The backtester reads from `src/backend/data/all_options_all_dates.csv`. A default SPX dataset is included. To swap in your own data, match these columns:
 
-# Run the main application
-streamlit run frontend/streamlit.py
-```
+| Column | Description |
+|---|---|
+| `contractSymbol` | Option contract identifier |
+| `strike` | Strike price |
+| `bid` | Bid price |
+| `ask` | Ask price |
+| `impliedVolatility` | Market implied volatility |
+| `Expiration` | Expiration date |
+| `Type` | `call` or `put` |
+| `lastTradeDate` | Trade date |
+| `volume` | Trading volume |
+| `openInterest` | Open interest |
 
-The application will open in your browser at `http://localhost:8501`
+## Advanced Configuration
 
-#### 2. Run Backtesting Analysis
+Custom risk-free rate:
 
-```bash
-# Jupyter notebook
-jupyter notebook backend/backtesting/backtesting.ipynb
-```
-
-#### 3. Data Requirements
-
-Use the default SPX options dataset or use your SPX options dataset in `src/backend/data/all_options_all_dates.csv`
-
-**Expected CSV columns:**
-- `contractSymbol`: Option contract identifier
-- `strike`: Strike price
-- `bid`: Bid price
-- `ask`: Ask price
-- `impliedVolatility`: Market implied volatility
-- `Expiration`: Expiration date
-- `Type`: 'call' or 'put'
-- `lastTradeDate`: Trade date
-- `volume`: Trading volume
-- `openInterest`: Open interest
-
-## Advanced Configurations
-
-### Custom Risk-Free Rate
 ```python
-# In your Python scripts
 from backend.data.data_fetcher import DataFetcher
 fetcher = DataFetcher()
 fetcher.risk_free_rate = 0.045  # 4.5%
 ```
 
-### Monte Carlo Parameters
+Monte Carlo path count:
+
 ```python
-# Adjust simulation parameters
 from backend.models.option_models import OptionPricingModels
 pricing = OptionPricingModels(S, K, T, r, sigma, option_type)
 mc_price, paths = pricing.new_monte_carlo_option_price(num_simulations=50000)
 ```
 
-### Binomial Tree Resolution
+Binomial tree resolution:
+
 ```python
-# Higher resolution binomial tree
-bt_price = pricing.binomial_tree_option_price(N=200)  # 200 steps
+bt_price = pricing.binomial_tree_option_price(N=200)
 ```
 
 ## License
 
-MIT License - Open source for educational and research purposes.
+MIT License. Open source for educational and research use.
