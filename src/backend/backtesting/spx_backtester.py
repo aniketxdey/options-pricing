@@ -21,7 +21,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib import colors
 
 class SPXBacktester:
-    def __init__(self, data_path=None, output_folder='output'):
+    def __init__(self, data_path=None, output_folder='src/backend/results'):
         # Get the directory of this file and construct absolute path
         current_dir = os.path.dirname(os.path.abspath(__file__))
         

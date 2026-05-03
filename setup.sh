@@ -9,7 +9,7 @@ mkdir -p src/backend/models
 mkdir -p src/backend/data
 mkdir -p src/backend/utils
 mkdir -p src/backend/backtesting/data
-mkdir -p backtesting_results
+mkdir -p src/backend/results
 
 # Package markers
 touch src/backend/__init__.py
@@ -53,4 +53,4 @@ echo ""
 echo "Run the app:"
 echo "    streamlit run src/streamlit.py"
 echo ""
-echo "Backtests write to ./backtesting_results"
+echo "Backtests write to ./src/backend/results"

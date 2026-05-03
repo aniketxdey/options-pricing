@@ -1312,7 +1312,7 @@ elif st.session_state.current_page == "Backtesting Results":
     # Try to pre-load prior results
     if not getattr(st.session_state, "backtest_completed", False):
         try:
-            results_file = "backtesting_results/spx_backtest_results.csv"
+            results_file = "src/backend/results/spx_backtest_results.csv"
             if os.path.exists(results_file):
                 existing_results = pd.read_csv(results_file)
                 if not existing_results.empty:
@@ -1349,7 +1349,7 @@ elif st.session_state.current_page == "Backtesting Results":
         if getattr(st.session_state, "backtesting_running", False):
             with st.spinner("Running backtest across concurrent contracts…"):
                 try:
-                    backtester = SPXBacktester(output_folder="backtesting_results")
+                    backtester = SPXBacktester(output_folder="src/backend/results")
                     results = backtester.run_full_analysis(sample_size=backtest_sample_size)
                     st.session_state.backtesting_running = False
                     if results is not None and not results.empty:
