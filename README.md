@@ -1,4 +1,4 @@
-# Options Pricing & Implied Volaitlity Surface Platform
+# Quantra: Open-source options pricing & implied volatility fititng
 
 Comprehensive options pricing and analysis application with multiple financial and machine learning models for options pricing. The app provides real-time low-latencty pricing, backtesting capabilities, and professional-grade analytics through an intuitive Streamlit web interface.
 
