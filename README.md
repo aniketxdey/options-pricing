@@ -4,11 +4,39 @@ Quantra is an online, educational options pricing and analysis platform that pro
 
 [**Website Link**](https://advancedoptionspricing.streamlit.app/)
 
-<img width="1458" alt="Screenshot 2025-06-29 at 10 13 47 PM" src="https://github.com/user-attachments/assets/49e4f22c-c44f-4ffb-80eb-2a2e56947e1e" />
+<img width="1119" height="729" alt="Screenshot 2026-05-03 at 5 19 28 PM" src="https://github.com/user-attachments/assets/c842c3f6-204f-4117-809e-ce0855d2a3d3" />
 
-<img width="1416" alt="Screenshot 2025-06-29 at 10 13 57 PM" src="https://github.com/user-attachments/assets/72612a03-9529-4235-ba39-1f1ab71ab12d" />
+## Pricing Infrastructure
 
-## Pricing Models
+
+  
+<img width="1451" alt="Screenshot 2025-06-29 at 10 14 15 PM" src="https://github.com/user-attachments/assets/523e8233-f544-49af-a2d5-7efebd2345ff" />
+
+### Backtesting
+- Pricing models are calibrated via a comprehensive historical backtesting engine using SPX options data
+- Data is pre-processed and filtered to only yield high-quality contracts, and predicted vs. actual prices are measured
+- Models are calibrated to SPX surfaces & optimized for backtesting
+
+<img width="1114" height="857" alt="Screenshot 2026-05-03 at 5 20 47 PM" src="https://github.com/user-attachments/assets/e6a0460e-5bf9-4358-992e-ebf451f732d1" />
+
+
+## Features
+
+
+### 1. Option Pricing Calculator
+
+   - Parameters: Ticker symbol, option type (Call/Put), strike price and expiration, risk-free rate and volatility (Use Live Market Data/Historical)
+   - Automatic price and volatility fetching; real-time risk-free rate updates
+   - All model prices display side-by-side with complete Greeks calculation
+   - Price sensitivity analysis & Monte Carlo path visualization
+- Performance Metrics:
+    - MAE, RMSE, percentage errors across all models
+    - Statistical significance testing
+    - Error distribution analysis
+    - Performance by option characteristics
+
+
+** Models **
 1. Black-Scholes Model:
     - Analytical European option pricing with complete Greeks
     - See detailed literature & research notes in `literature.md`
@@ -17,20 +45,8 @@ Quantra is an online, educational options pricing and analysis platform that pro
     - Heston stochastic volatility model with multi-path visualization  
 3. Binomial Tree Method:
      - Discrete-time lattice approach for American/European options
-  
-<img width="1451" alt="Screenshot 2025-06-29 at 10 14 15 PM" src="https://github.com/user-attachments/assets/523e8233-f544-49af-a2d5-7efebd2345ff" />
-
-## Backtesting: 
-- Pricing models are calibrated via a comprehensive historical backtesting engine using SPX options data
-- Data is pre-processed and filtered to only yield high-quality contracts, and predicted vs. actual prices are measured
-- Models are calibrated to SPX surfaces & optimized for backtesting
-
-![Screenshot 2025-06-30 at 12 14 47 AM](https://github.com/user-attachments/assets/9ea0b4ed-6836-4558-b196-25e6eb4e2d60)
-
-## Features
-
-- Option Pricing Calculator:
-   - Paraneters: Ticker symbol, option type (Call/Put), strike price and expiration, risk-free rate and volatility (Use Live Market Data/Historical)
+       
+   - Parameters: Ticker symbol, option type (Call/Put), strike price and expiration, risk-free rate and volatility (Use Live Market Data/Historical)
    - Automatic price and volatility fetching; real-time risk-free rate updates
    - All model prices display side-by-side with complete Greeks calculation
    - Price sensitivity analysis & Monte Carlo path visualization
