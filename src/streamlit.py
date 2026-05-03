@@ -7,7 +7,7 @@ from datetime import datetime
 import sys
 import os
 
-sys.path.append('src/backend')
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'backend'))
 
 from models.option_models import OptionPricingModels, ImpliedVolatilityCalculator
 from models.implied_volatility import ImpliedVolatilitySurface
@@ -1312,7 +1312,7 @@ elif st.session_state.current_page == "Backtesting Results":
     # Try to pre-load prior results
     if not getattr(st.session_state, "backtest_completed", False):
         try:
-            results_file = "output/spx_backtest_results.csv"
+            results_file = "backtesting_results/spx_backtest_results.csv"
             if os.path.exists(results_file):
                 existing_results = pd.read_csv(results_file)
                 if not existing_results.empty:
@@ -1349,7 +1349,7 @@ elif st.session_state.current_page == "Backtesting Results":
         if getattr(st.session_state, "backtesting_running", False):
             with st.spinner("Running backtest across concurrent contracts…"):
                 try:
-                    backtester = SPXBacktester(output_folder="output")
+                    backtester = SPXBacktester(output_folder="backtesting_results")
                     results = backtester.run_full_analysis(sample_size=backtest_sample_size)
                     st.session_state.backtesting_running = False
                     if results is not None and not results.empty:

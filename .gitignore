@@ -50,8 +50,8 @@ Thumbs.db
 .devcontainer/
 
 # Generated backtest / report artifacts
-output/*
-!output/.gitkeep
+backtesting_results/*
+!backtesting_results/.gitkeep
 
 # Jupyter
 .ipynb_checkpoints/

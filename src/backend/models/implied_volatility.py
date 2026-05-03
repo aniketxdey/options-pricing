@@ -449,10 +449,10 @@ class ImpliedVolatilitySurface:
             filename = f"{self.ticker}_iv_surface_{timestamp}"
         
         if format == 'csv':
-            filepath = f"output/{filename}.csv"
+            filepath = f"backtesting_results/{filename}.csv"
             options_df.to_csv(filepath, index=False)
         elif format == 'excel':
-            filepath = f"output/{filename}.xlsx"
+            filepath = f"backtesting_results/{filename}.xlsx"
             options_df.to_excel(filepath, index=False)
         
         return filepath
