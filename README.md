@@ -1,6 +1,6 @@
 # Quantra: Real-time options pricing & implied volatility platform
 
-Quantra is an online, educational options pricing and analysis platform that provides real-time low-latency pricing, backtesting capabilities, and volatility fitting through an intuitive Streamlit web interface. Quantra was developed to provide MATH 86 students at Dartmouth College with a customizable example of real pricing infrastructure to understand firsthand relationships & sesnitivities among the Greeks, hedging & portfolio management workflows, and how traditional pricing models are deployed.
+Quantra is an online, educational options pricing and analysis platform that provides real-time low-latency pricing, backtesting capabilities, and volatility fitting through an intuitive Streamlit web interface. Quantra was developed to provide Mathematical Finance I (MATH 86) students at Dartmouth College with a customizable example of real pricing infrastructure to understand firsthand relationships & sesnitivities among the Greeks, hedging & portfolio management workflows, and how traditional pricing models are deployed.
 
 [**Quantra**](https://quantra.streamlit.app/)
 
