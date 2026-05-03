@@ -21,13 +21,21 @@ wheels/
 .installed.cfg
 *.egg
 
-# Virtual Environment
+# Virtual environments
 venv/
+.venv/
 ENV/
+env.bak/
+venv.bak/
 
-# IDE
+# Environment variables
+.env
+.env.local
+
+# IDE / editors
 .idea/
 .vscode/
+.cursor/
 *.swp
 *.swo
 
@@ -37,3 +45,13 @@ ENV/
 # OS
 .DS_Store
 Thumbs.db
+
+# Dev containers (not needed on GitHub for this project)
+.devcontainer/
+
+# Generated backtest / report artifacts
+output/*
+!output/.gitkeep
+
+# Jupyter
+.ipynb_checkpoints/

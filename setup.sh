@@ -45,7 +45,7 @@ mkdir -p output/reports
 # Verify installation
 echo "✅ Verifying installation..."
 python -c "
-import numpy, pandas, scipy, sklearn, xgboost, yfinance, plotly, streamlit
+import numpy, pandas, scipy, sklearn, yfinance, plotly, streamlit
 print('✅ All core packages imported successfully')
 
 try:

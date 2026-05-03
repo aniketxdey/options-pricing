@@ -14,7 +14,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.linear_model import LinearRegression
 from sklearn.svm import SVR
-from xgboost import XGBRegressor
 from sklearn.preprocessing import StandardScaler
 
 from reportlab.lib.pagesizes import letter
@@ -374,16 +373,13 @@ class SPXBacktester:
                 random_state=42, 
                 n_jobs=-1
             ),
-            'XGBoost': XGBRegressor(
+            'Gradient Boosting (Deep)': GradientBoostingRegressor(
                 n_estimators=200,
                 max_depth=8,
                 learning_rate=0.1,
                 subsample=0.8,
-                colsample_bytree=0.8,
-                reg_alpha=0.1,
-                reg_lambda=0.1,
-                random_state=42,
-                n_jobs=-1
+                max_features=0.8,
+                random_state=42
             ),
             'Linear Regression': LinearRegression(),
             'SVR': SVR(kernel='rbf', C=10.0, epsilon=0.01, gamma='scale'),
