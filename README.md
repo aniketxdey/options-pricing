@@ -2,7 +2,7 @@
 
 Quantra is an online, educational options pricing and analysis platform that provides real-time low-latency pricing, backtesting capabilities, and volatility fitting through an intuitive Streamlit web interface. Quantra was developed to provide Mathematical Finance I (MATH 86) students at Dartmouth College with a customizable example of real pricing infrastructure to understand firsthand relationships & sesnitivities among the Greeks, hedging & portfolio management workflows, and how traditional pricing models are deployed.
 
-[**Quantra**]((https://advancedoptionspricing.streamlit.app/))
+[**Quantra**](https://advancedoptionspricing.streamlit.app/)
 
 <img width="1119" height="729" alt="Screenshot 2026-05-03 at 5 19 28 PM" src="https://github.com/user-attachments/assets/c842c3f6-204f-4117-809e-ce0855d2a3d3" />
 
